@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\BookModel;
@@ -6,33 +7,44 @@ use App\Repositories\BookRepository;
 
 class BookController
 {
-    private BookRepository $bookRepo;
+    private BookRepository $repo;
+
     public function __construct()
     {
-        // Initialize repository
-        $this->bookRepo = new BookRepository();
+        $this->repo = new BookRepository();
     }
 
-    /**
-     * Create a new book
-     *
-     * @param array $data associative array with book data
-     * @return bool
-     */
-    public function create(array $data): bool
+    /*
+       *  @param array $data associative array with book data
+       *  @return bool 
+    */
+
+    //   Save book
+    public function save(): void
     {
-        // Create BookModel from input data
+      $data = json_decode(file_get_contents('php://input'), true);
         $book = new BookModel(
             $data['title'],
-            $data['author_id'],
-            $data['category_id'],
+            $data['description'],
             $data['price'],
             $data['stock'],
-            $data['description'],
-            $data['published_date']
+            $data['author_id'],
+            $data['category_id'],
+            $data['published_date'],
+            $data['book_img']
         );
-
-        // Save book via repository
-        return $this->bookRepo->save($book);
+        if ($this->repo->saveBook($book)) {
+            http_response_code(201);
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Book created successfully ✅',
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to create book ❌'
+            ]);
+        }
     }
 }
