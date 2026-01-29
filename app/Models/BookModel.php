@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 class BookModel
@@ -30,7 +31,6 @@ class BookModel
         $this->publishedDate = $publishedDate;
     }
 
-    // -------- Getters (NO SQL) --------
 
     public function getId(): ?int
     {
