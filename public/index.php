@@ -19,9 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $router = new Router();
-// $router->get('/books', [new BookController(),'index']);
-// $router->get('/books/{id}', [new BookController(), 'show']);
+$router->get('/books', [new BookController(),'index']);
+$router->get('/books/{id}', [new BookController(), 'show']);
 $router->post('/books', [new BookController(), 'save']);
-// $router->put('/books/{id}', [new BookController(), 'update']);
-// $router->delete('/books/{id}', [new BookController(), 'destroy']);
+$router->put('/books/{id}', [new BookController(), 'update']);
+$router->delete('/books/{id}', [new BookController(), 'delete']);
 $router->dispatch();
