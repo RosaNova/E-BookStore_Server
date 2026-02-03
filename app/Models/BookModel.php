@@ -16,11 +16,11 @@ class BookModel{
     // Constructor
     public function __construct(
         string $title = '',
-        string $description = '',
-        float $price = 0.0,
-        int $stock = 0,
         int $author_id = 0,
         int $category_id = 0,
+        float $price = 0.0,
+        int $stock = 0,
+        string $description = '',
         string $published_date = '',
         string $book_image = '',
     ) {

@@ -58,13 +58,11 @@ class BookController
     {
         try {
             $books = $this->repo->getAll();
-
             http_response_code(200);
             echo json_encode([
                 'status' => 'success',
                 'data' => $books
             ]);
-
         } catch (RuntimeException $e) {
             http_response_code(500);
             echo json_encode([
@@ -124,9 +122,7 @@ class BookController
                 $data['published_date'],
                 $data['book_img'] ?? null
             );
-
             $this->repo->updateBook($id, $book);
-
             http_response_code(200);
             echo json_encode([
                 'status' => 'success',
