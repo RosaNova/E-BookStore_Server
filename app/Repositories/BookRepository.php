@@ -79,7 +79,7 @@ class BookRepository
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-
+            
             $book = $stmt->fetch(PDO::FETCH_ASSOC);
             return $book ?: null;
 

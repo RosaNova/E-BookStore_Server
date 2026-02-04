@@ -6,7 +6,7 @@ class Router
 {
     private array $routes = [];
 
-    public function get(string $path, array $handler)
+    public function get(string $path, callable $handler)
     {
         $this->routes['GET'][$path] = $handler;
     }
