@@ -39,5 +39,26 @@ class AdminController{
         }
     }
 
+    /*
+     login  : 
+    */
+    public function login(){
+        $data = json_decode(file_get_contents("php://input"), true);
+           $AdminData = $this->repository->login($data['email']);
+        if (!$AdminData){
+            http_response_code(401);
+            echo json_encode(['message' => 'Invalid credentials']);
+            return;
+        }
+        // verify password
+        if (!password_verify($data['password'], $AdminData['password'])) {
+            http_response_code(401);
+            echo json_encode(['message' => 'Invalid credentials']);
+            return;
+        }
 
-}
+            http_response_code(201);
+            echo json_encode(['message' => 'Login Successfully !']);
+    }
+     
+} 

@@ -40,7 +40,7 @@ $router->delete('/customers/{id}', [new CustomerController(), 'delete']);
 // $router->get('/admin', [new AdminController(), 'index']);
 // $router->get('/admin/{id}', [new AdminController(), 'show']);
 $router->post('/admin', [new AdminController(), 'store']);
-// $router->get('/admin',[new AdminController(), 'login']);
+$router->get('/admin',[new AdminController(), 'login']);
 // $router->put('/admin/{id}', [new AdminController(), 'update']);
 // $router->delete('/admin/{id}', [new AdminController(), 'delete']);
 
