@@ -4,21 +4,41 @@ namespace App\Helpers;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class JwtToken{
-    private static string $secret = 'YOUR_SECRET_KEY'; // put in .env
-
-    public static function generate(array $payload, int $expiry = 3600): string
+class JwtToken
+{
+    private static function secret(): string
     {
-        $payload['exp'] = time() + $expiry;
-        return JWT::encode($payload, self::$secret, 'HS256');
+        return $_ENV['JWT_SECRET'];
     }
 
+    /**
+     * HEADER  : { "alg": "HS256", "typ": "JWT" }
+     * PAYLOAD : user data + exp
+     * SIGN    : created using JWT_SECRET
+     */
+    
+    public static function generate(array $payload, int $expiresIn = 3600): string
+    {
+        $payload['exp'] = time() + $expiresIn;
+        return JWT::encode(
+            $payload,                // Payload
+            self::secret(),          // Signature key
+            'HS256'                  // Algorithm (Header)
+        );
+    }
+
+    /**
+     * Verify signature + expiration
+     */
     public static function verify(string $token): ?array
     {
         try {
-            return (array) JWT::decode($token, new Key(self::$secret, 'HS256'));
-        } catch (\Exception $e) {
-            return null;
+            return (array) JWT::decode(
+                $token,
+                new Key(self::secret(), 'HS256')
+            );
+        } catch (\Throwable $e) {
+            return null; // invalid / expired token
         }
     }
 }
