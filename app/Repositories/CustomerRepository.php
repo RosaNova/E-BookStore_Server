@@ -89,4 +89,45 @@ class CustomerRepository{
         $stmt = $this->db->prepare("DELETE FROM customers WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
+
+    /** Save reset token */
+    public function saveResetToken(string $email, string $token, string $expiry): bool
+    {
+        $sql = "UPDATE customers SET reset_token = :token, reset_token_expires = :expiry WHERE email = :email";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'token'  => $token,
+            'expiry' => $expiry,
+            'email'  => $email
+        ]);
+    }
+
+    /** Find customer by reset token */
+    public function findByResetToken(string $token): ?array
+    {
+        $sql = "SELECT * FROM customers WHERE reset_token = :token AND reset_token_expiry > NOW()";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['token' => $token]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $data ?: null;
+    }
+
+    /** Update password */
+    public function updatePassword(int $id, string $hashedPassword): bool
+    {
+        $sql = "UPDATE customers SET password = :password WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'password' => $hashedPassword,
+            'id'       => $id
+        ]);
+    }
+
+    /** Clear reset token */
+    public function clearResetToken(int $id): bool
+    {
+        $sql = "UPDATE customers SET reset_token = NULL, reset_token_expiry = NULL WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
 }
