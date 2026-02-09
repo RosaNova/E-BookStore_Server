@@ -88,7 +88,6 @@ class CustomerController{
         $token = JwtToken::generate([
             'id' => $customerData['id'],
             'email' => $customerData['email'],
-            'role' => $customerData['role'] ?? 'customer'
         ]);
 
         echo json_encode(['token' => $token]);

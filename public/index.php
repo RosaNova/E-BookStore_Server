@@ -33,6 +33,7 @@ $router->delete('/books/{id}', [new BookController(), 'delete']);
 $router->get('/customers', [new CustomerController(), 'index']);
 $router->get('/customers/{id}', [new CustomerController(), 'show']);
 $router->post('/customers', [new CustomerController(), 'store']);
+$router->post('/customers/login', [new CustomerController(), 'login']);
 $router->put('/customers/{id}', [new CustomerController(), 'update']);
 $router->delete('/customers/{id}', [new CustomerController(), 'delete']);
 

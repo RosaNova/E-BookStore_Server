@@ -32,8 +32,8 @@ class CustomerRepository{
     public function create(CustomerModel $customer): bool
     {
         $sql = "INSERT INTO customers 
-                (first_name, last_name, email, phone, address)
-                VALUES (:first_name, :last_name, :email, :phone, :address)";
+                (first_name, last_name, email, phone, address , password)
+                VALUES (:first_name, :last_name, :email, :phone, :address , :password)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -42,7 +42,8 @@ class CustomerRepository{
             'last_name'  => $customer->last_name,
             'email'      => $customer->email,
             'phone'      => $customer->phone,
-            'address'    => $customer->address
+            'address'    => $customer->address,
+            'password'   => $customer->password
         ]);
     }
 
@@ -54,7 +55,8 @@ class CustomerRepository{
                 last_name  = :last_name,
                 email      = :email,
                 phone      = :phone,
-                address    = :address
+                address    = :address,
+                password   = :password
                 WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
@@ -65,7 +67,8 @@ class CustomerRepository{
             'last_name'  => $customer->last_name,
             'email'      => $customer->email,
             'phone'      => $customer->phone,
-            'address'    => $customer->address
+            'address'    => $customer->address,
+            'password'   => $customer->password
         ]);
     }
 
