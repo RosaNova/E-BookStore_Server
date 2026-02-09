@@ -33,8 +33,11 @@ $router->delete('/books/{id}', [new BookController(), 'delete']);
 $router->get('/customers', [new CustomerController(), 'index']);
 $router->get('/customers/{id}', [new CustomerController(), 'show']);
 $router->post('/customers', [new CustomerController(), 'store']);
+$router->post('/customers/login', [new CustomerController(), 'login']);
 $router->put('/customers/{id}', [new CustomerController(), 'update']);
 $router->delete('/customers/{id}', [new CustomerController(), 'delete']);
+$router->post('/customers/forgot-password', [new CustomerController(), 'forgotPassword']);
+$router->post('/customers/reset-password', [new CustomerController(), 'resetPassword']);
 
 //  Admin API end-point
 // $router->get('/admin', [new AdminController(), 'index']);

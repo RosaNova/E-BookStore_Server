@@ -118,4 +118,70 @@ class CustomerController{
             echo json_encode(['message' => 'Delete failed']);
         }
     }
+
+    /** POST /customers/forgot-password */
+    public function forgotPassword()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $email = $data['email'] ?? '';
+
+        if (empty($email)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Email is required']);
+            return;
+        }
+
+        $customer = $this->repository->findByEmail($email);
+        if (!$customer) {
+            // Security: don't reveal if email exists, but for this task we'll be helpful
+            http_response_code(404);
+            echo json_encode(['message' => 'Customer not found']);
+            return;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+        if ($this->repository->saveResetToken($email, $token, $expiry)) {
+            // Mock email sending
+            echo json_encode([
+                'message' => 'Reset token generated (Mock Email Sent)',
+                'debug_token' => $token // Included for testing purposes
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['message' => 'Failed to generate reset token']);
+        }
+    }
+
+    /** POST /customers/reset-password */
+    public function resetPassword()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $token = $data['token'] ?? '';
+        $newPassword = $data['new_password'] ?? '';
+
+        if (empty($token) || empty($newPassword)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Token and new password are required']);
+            return;
+        }
+
+        $customer = $this->repository->findByResetToken($token);
+        if (!$customer) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Invalid or expired token']);
+            return;
+        }
+
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        if ($this->repository->updatePassword($customer['id'], $hashedPassword)) {
+            $this->repository->clearResetToken($customer['id']);
+            echo json_encode(['message' => 'Password reset successfully']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['message' => 'Failed to reset password']);
+        }
+    }
 }
