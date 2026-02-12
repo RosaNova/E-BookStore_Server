@@ -91,12 +91,24 @@ public function store()
             'email' => $AdminData['email'],
         ]);
 
+        // // Set cookie
+        // setcookie(
+        //     "access_token",
+        //     $token,
+        //     [
+        //         "expires"  => time() + 3600, // 1 hour
+        //         "path"     => "/",
+        //         "secure"   => true,         // HTTPS only
+        //         "httponly" => true,         // JS cannot access
+        //         "samesite" => "Strict"      // CSRF protection
+        //     ]
+        // );
+
         // 4️⃣ Response
         http_response_code(200);
         echo json_encode([
-            'message' => 'Login successful',
-            'token'   => $token,
-            'type'    => 'Bearer'
+            // 'message' => 'Login successful',
+            'token' => $token
         ]);
     }
 }

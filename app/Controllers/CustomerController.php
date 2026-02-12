@@ -69,7 +69,6 @@ class CustomerController{
     public function login()
     {
         $data = json_decode(file_get_contents("php://input"), true);
-
         $customerData = $this->repository->findByEmail($data['email']);
         if (!$customerData) {
             http_response_code(401);
@@ -90,7 +89,23 @@ class CustomerController{
             'email' => $customerData['email'],
         ]);
 
-        echo json_encode(['token' => $token]);
+        // Set cookie
+        // setcookie(
+        //     "access_token",
+        //     $token,
+        //     [
+        //         "expires"  => time() + 3600, // 1 hour
+        //         "path"     => "/",
+        //         "secure"   => true,         // HTTPS only
+        //         "httponly" => true,         // JS cannot access
+        //         "samesite" => "Strict"      // CSRF protection
+        //     ]
+        // );
+
+        // echo json_encode(['message' => 'Login successful'])
+           echo json_encode([
+            'token' => $token
+        ]);
     }
 
     /** PUT /customers/{id} */
@@ -139,7 +154,8 @@ class CustomerController{
         }
 
         $token = bin2hex(random_bytes(32));
-        $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $expiresIn = $_ENV['RESET_TOKEN_EXPIRY'] ?? '1 hour';
+        $expiry = date('Y-m-d H:i:s', strtotime('+' . $expiresIn));
 
         if ($this->repository->saveResetToken($email, $token, $expiry)) {
             // Mock email sending
@@ -182,5 +198,21 @@ class CustomerController{
             http_response_code(500);
             echo json_encode(['message' => 'Failed to reset password']);
         }
+    }
+
+
+    //  Logout 
+    public function logout()
+    {
+        // Clear cookie
+        setcookie("access_token", "", [
+            "expires" => time() - 3600,
+            "path" => "/",
+            "secure" => true,
+            "httponly" => true,
+            "samesite" => "Strict"
+        ]);
+
+        echo json_encode(['message' => 'User logged out successfully']);
     }
 }

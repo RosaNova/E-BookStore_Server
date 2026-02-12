@@ -12,9 +12,10 @@ $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: *"); // Update this to your frontend URL
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
@@ -32,12 +33,13 @@ $router->delete('/books/{id}', [new BookController(), 'delete']);
 //  Customer API end-point
 $router->get('/customers', [new CustomerController(), 'index']);
 $router->get('/customers/{id}', [new CustomerController(), 'show']);
-$router->post('/customers', [new CustomerController(), 'store']);
+$router->post('/customers/register', [new CustomerController(), 'store']);
 $router->post('/customers/login', [new CustomerController(), 'login']);
 $router->put('/customers/{id}', [new CustomerController(), 'update']);
 $router->delete('/customers/{id}', [new CustomerController(), 'delete']);
 $router->post('/customers/forgot-password', [new CustomerController(), 'forgotPassword']);
 $router->post('/customers/reset-password', [new CustomerController(), 'resetPassword']);
+$router->put('/customers/logout', [new CustomerController(), 'logout']);
 
 //  Admin API end-point
 // $router->get('/admin', [new AdminController(), 'index']);
