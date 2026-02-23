@@ -49,4 +49,6 @@ $router->get('/admin',[new AdminController(), 'login']);
 // $router->put('/admin/{id}', [new AdminController(), 'update']);
 // $router->delete('/admin/{id}', [new AdminController(), 'delete']);
 
+
+$router->get("/bookcategory", [new BookCategoriesController(), 'index']);
 $router->dispatch();
