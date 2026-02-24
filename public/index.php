@@ -5,6 +5,7 @@ use Dotenv\Dotenv;
 use App\Controllers\BookController;
 use App\Controllers\CustomerController;
 use App\Controllers\AdminController;
+use App\Controllers\BookCategoriesController;
 use App\Routes\Router;
 
 // Load .env
@@ -29,6 +30,7 @@ $router->get('/books/{id}', [new BookController(), 'show']);
 $router->post('/books', [new BookController(), 'save']);
 $router->put('/books/{id}', [new BookController(), 'update']);
 $router->delete('/books/{id}', [new BookController(), 'delete']);
+$router->get('/bookprice',[new BookController(), 'getBookPrice']);
 
 //  Customer API end-point
 $router->get('/customers', [new CustomerController(), 'index']);
@@ -51,4 +53,5 @@ $router->get('/admin',[new AdminController(), 'login']);
 
 
 $router->get("/bookcategory", [new BookCategoriesController(), 'index']);
+
 $router->dispatch();

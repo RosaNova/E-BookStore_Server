@@ -141,4 +141,16 @@ class BookRepository
             throw new RuntimeException('Failed to delete book: ' . $e->getMessage());
         }
     }
+
+
+    //  Get All Price from Books
+    public function getAllPrice(){
+         try{
+            $sql = "SELECT DISTINCT price FROM books ORDER BY price DESC";
+            $stmt = $this->conn->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+         }catch(PDOException $e){
+            throw new RuntimeException('Failed to fetch books: ' . $e->getMessage());
+         } 
+    }
 }

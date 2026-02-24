@@ -1,12 +1,12 @@
 <?php
 namespace App\Repositories;
 use PDO;
-use App\Config\Database;
+use App\Config\DatabaseConnection;
 class BookCategoriesRepository{
         private PDO $db;
 
         public function __construct() {
-             $this->db = Database::getInstance()->getConnection();
+             $this->db = DatabaseConnection::getInstance();
         }
 
         // get All Book Category
