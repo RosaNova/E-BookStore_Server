@@ -179,4 +179,23 @@ class BookController
             ]);
         }
     }
+
+    // Count Total of Books
+    public function countBooks(){
+        try{
+            $count = $this->repo->countBooks();
+            http_response_code(200);
+            echo json_encode([
+                'status' => 'success',
+                'total_books' => $count
+            ]);
+        }catch(RuntimeException $e){
+             http_response_code(500);
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    
 }

@@ -48,7 +48,6 @@ class BookRepository
             $ps->bindValue(':book_img', $book->getBookImage(), PDO::PARAM_STR);
 
             return $ps->execute();
-
         } catch (PDOException $e) {
             throw new RuntimeException('Failed to save book: ' . $e->getMessage());
         }
@@ -60,10 +59,23 @@ class BookRepository
     public function getAll(): array
     {
         try {
-            $sql = "SELECT * FROM books ORDER BY id DESC";
+            $sql = "
+            SELECT 
+            *,
+    books.id,
+    books.title,
+    authors.name AS author_name,
+    categories.name AS category_name
+FROM books
+INNER JOIN authors 
+    ON books.author_id = authors.id
+INNER JOIN categories 
+    ON books.category_id = categories.id
+ORDER BY books.id DESC;
+             ";
+
             $stmt = $this->conn->query($sql);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         } catch (PDOException $e) {
             throw new RuntimeException('Failed to fetch books: ' . $e->getMessage());
         }
@@ -79,10 +91,9 @@ class BookRepository
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             $book = $stmt->fetch(PDO::FETCH_ASSOC);
             return $book ?: null;
-
         } catch (PDOException $e) {
             throw new RuntimeException('Failed to fetch book: ' . $e->getMessage());
         }
@@ -120,7 +131,6 @@ class BookRepository
             $ps->bindValue(':book_img', $book->getBookImage());
 
             return $ps->execute();
-
         } catch (PDOException $e) {
             throw new RuntimeException('Failed to update book: ' . $e->getMessage());
         }
@@ -136,7 +146,6 @@ class BookRepository
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             return $stmt->execute();
-
         } catch (PDOException $e) {
             throw new RuntimeException('Failed to delete book: ' . $e->getMessage());
         }
@@ -144,13 +153,27 @@ class BookRepository
 
 
     //  Get All Price from Books
-    public function getAllPrice(){
-         try{
+    public function getAllPrice()
+    {
+        try {
             $sql = "SELECT DISTINCT price FROM books ORDER BY price DESC";
             $stmt = $this->conn->query($sql);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-         }catch(PDOException $e){
+        } catch (PDOException $e) {
             throw new RuntimeException('Failed to fetch books: ' . $e->getMessage());
-         } 
+        }
+    }
+
+    // Count Total Books
+    public function countBooks(): int
+    {
+        try {
+            $sql = "SELECT COUNT(*) AS total FROM books";
+            $stmt = $this->conn->query($sql);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return (int)$result['total'];
+        } catch (PDOException $e) {
+            throw new RuntimeException('Failed to count books: ' . $e->getMessage());
+        }
     }
 }

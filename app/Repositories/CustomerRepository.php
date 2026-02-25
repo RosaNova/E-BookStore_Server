@@ -36,7 +36,6 @@ class CustomerRepository{
                 VALUES (:first_name, :last_name, :email, :phone, :address , :password)";
 
         $stmt = $this->db->prepare($sql);
-
         return $stmt->execute([
             'first_name' => $customer->first_name,
             'last_name'  => $customer->last_name,
@@ -139,4 +138,12 @@ class CustomerRepository{
         $stmt = $this->db->prepare($sql);
         return $stmt->execute(['id' => $id]);
     }
+
+    // Total Customers
+    public function countCustomers(): int{
+        $stmt = $this->db->query("SELECT COUNT(*) as totalCustomer FROM customers");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['totalCustomer'];   
+    }
+   
 }

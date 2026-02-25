@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Helpers\JwtToken;
 use App\Models\CustomerModel;
 use App\Repositories\CustomerRepository;
-
+use RuntimeException;
 class CustomerController{
     private CustomerRepository $repository;
 
@@ -214,5 +214,23 @@ class CustomerController{
         ]);
 
         echo json_encode(['message' => 'User logged out successfully']);
+    }
+
+
+    //   Get Total Customers
+    public function countCustomers(){
+        try {
+            $total = $this->repository->countCustomers();
+            echo json_encode([
+                'status' => 'success',
+                'total_customers' => $total
+            ]);
+        } catch (RuntimeException $e) {
+            http_response_code(500);
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
