@@ -30,8 +30,8 @@ class AdminRepository
     public function create(AdminModel $admin): bool
     {
         $sql = "INSERT INTO admin 
-                (first_name, last_name, email, phone, address , password)
-                VALUES (:first_name, :last_name, :email, :phone, :address , :password)";
+                (first_name, last_name, email, phone, role, address , password)
+                VALUES (:first_name, :last_name, :email, :phone , :role, :address , :password)";
 
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -39,30 +39,21 @@ class AdminRepository
             'last_name'  => $admin->last_name,
             'email'      => $admin->email,
             'phone'      => $admin->phone,
+            'role'       => $admin->role,
             'address'    => $admin->address,
             'password'  => $admin->password
         ]);
       }
 
-    /*
-       login :
-    */
-    public function login(string $email): ?array
-    {
-        $stmt = $this->db->prepare("SELECT * FROM admin WHERE email = :email");
-        $stmt->execute(['email' => $email]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $data ?: null;
-    }
 
     /*
      Find BY Eamil : 
     */
-    public function findByEmail(string $email): ?array
+    public function findByEmail(string $email): array
     {
-        $stmt = $this->db->prepare("SELECT email FROM admin WHERE email = :email");
+        $stmt = $this->db->prepare("SELECT * FROM admin WHERE email = :email");
         $stmt->execute(['email' => $email]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $data ?: null;
+        return $data ?: [];
     }
 }

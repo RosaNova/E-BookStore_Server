@@ -72,7 +72,7 @@ public function store()
     public function login()
     {
         $data = json_decode(file_get_contents("php://input"), true);
-        $AdminData = $this->repository->login($data['email']);
+        $AdminData = $this->repository->findByEmail($data['email']);
         if (!$AdminData) {
             http_response_code(401);
             echo json_encode(['message' => 'Invalid credentials']);
@@ -82,6 +82,12 @@ public function store()
         if (!password_verify($data['password'], $AdminData['password'])) {
             http_response_code(401);
             echo json_encode(['message' => 'Invalid credentials']);
+            return;
+        }
+        // check role       
+         if ($AdminData['role'] !== 'admin') {
+            http_response_code(403);
+            echo json_encode(['message' => 'Access denied']);
             return;
         }
 
@@ -108,7 +114,14 @@ public function store()
         http_response_code(200);
         echo json_encode([
             // 'message' => 'Login successful',
-            'token' => $token
+            'token' => $token,
+            'admin' => [
+                'id' => $AdminData['id'],
+                'email' => $AdminData['email'],
+                'first_name' => $AdminData['first_name'],
+                'last_name' => $AdminData['last_name'],
+                'role' => $AdminData['role'],   
+            ]
         ]);
     }
 }

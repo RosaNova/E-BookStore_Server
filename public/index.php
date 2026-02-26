@@ -48,10 +48,9 @@ $router->get('/customers/count', [new CustomerController(), 'countCustomers']);
 // Admin API end-point
 // $router->get('/admin', [new AdminController(), 'index']);
 // $router->get('/admin/{id}', [new AdminController(), 'show']);
-$router->post('/admin', [new AdminController(), 'store']);
-$router->get('/admin',[new AdminController(), 'login']);
+$router->post('/admin/register', [new AdminController(), 'store']);
+$router->post('/admin/login',[new AdminController(), 'login']);
 // $router->put('/admin/{id}', [new AdminController(), 'update']);
 // $router->delete('/admin/{id}', [new AdminController(), 'delete']);
-
 $router->get("/bookcategory", [new BookCategoriesController(), 'index']);
 $router->dispatch();
